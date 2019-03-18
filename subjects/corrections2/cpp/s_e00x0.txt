@@ -1,0 +1,160 @@
+Assignment name  : cpp00_00
+Expected files   : Unit.class.hpp Unit.class.cpp
+--------------------------------------------------------------------------------
+
+Dans cette simulation, nous allons tester les capacités suivantes:
+
+* Les mécanismes de classe basiques
+* La visibilité (private, protected et public)
+* Les fonctions et attributs membres
+* Les fonctions et attributs non-membres (static)
+* L'overloading de fonctions et d'opérateurs
+* La forme canonique
+
+Lisez la simulation entièrement avant de commencer à la coder.
+
+Ecrivez la classe canonique Unit. Dans ma grande bonté, je vous rappelle qu'une
+classe est dite canonique lorsqu'elle comporte: un constructeur par défaut, un
+constructeur par copie, un destructeur (virtual si besoin) et un opérateur
+d'affectation ("="). Tous ces éléments doivent être public dans la classe Unit.
+
+Ajoutez à votre classe Unit les attributs membres protected suivants :
+
+* Son index: int
+* Son type: std::string
+* Sa position X: int
+* Sa position Y: int
+* Les damages qu'elle cause: int
+* Ses points de vie actuels: int
+* Ses points de vie maximum: int
+
+L'index de l'unit est différent pour chaque unit. La première unit créée a
+l'index 0 et chaque nouvelle unit reçoit l'index disponible suivant. Même dans
+la construction par copie, les indexes doivent être différents. Mais lors d'une
+assignation, l'index reste inchangé. Vous avez besoin d'un attribut non membre
+(static) pour gérer ce comportement.
+
+Quand une nouvelle instance est créée, le constructeur doit afficher :
+"[CREATED] Unit #{INDEX}: {TYPE} in {X}/{Y} with {cHP}/{mHP}HP damaging at {DAM}."
+
+Quand une instance est détruite, le destructeur doit afficher :
+"[DESTRUCTED] Unit #{INDEX}: {TYPE} in {X}/{Y} with {cHP}/{mHP}HP damaging at {DAM}."
+
+Il doit être possible de créer une instance de la classe Unit en spécifiant
+(dans cet ordre): son type, sa position X, sa position Y, son damage, ses HP
+(Health Points = points de vie) actuels et ses HP maximum. Sinon, l'unit est
+initialisée à ses valeurs par défaut : 0 pour les ints et "Unit" pour son type.
+
+Ecrivez les accesseurs public suivants pour les attributs :
+
+* int getIndex( void ) const;
+* std::string const & getType( void ) const;
+* int getX( void ) const;
+* int getY( void ) const;
+* int getDam( void ) const;
+* int getCHP( void ) const;
+* int getMHP( void ) const;
+
+Vous devez overloader l'opérateur "<<" avec l'affichage suivante :
+"Unit #{INDEX}: {TYPE} in {X}/{Y} with {cHP}/{mHP}HP damaging at {DAM}."
+
+Ajoutez la fonction membre "void die( void );" qui affiche:
+"Unit #{INDEX ({TYPE}) died."
+
+Si une unit qui meurt a toujours des HP, les HP sont mis à 0. Une unit morte
+ne peut faire aucune action, ni recevoir des damages additionnels. Enfin, vous
+voyez, elle est morte quoi.
+
+Le seul attribut de la classe qui n'est pas read-only est l'HP actuel.
+Overloadez les opérators "+=" et "-=" pour pouvoir changer la valeur de cet
+attribut. L'HP actuel ne peut pas dépasser l'HP maximum: (IF cHP > mHP THEN cHP
+= mHP). De plus, l'HP actuel ne peut pas non plus descendre en dessous de 0:
+(IF cHP < 0 THEN cHP = 0). Si l'HP d'une unit descend à 0, appelez la fonction
+membre die : l'unit est morte.
+
+Ajoutez la fonction membre "void move( int x, int y);"
+Cette fonction membre affiche:
+"Unit #{INDEX} ({TYPE}) is moving from {Xf}/{Yf} to {Xt}/{Yt}."
+Elle et bouge ensuite l'unit à l'emplacement spécifié.
+
+Ajoutez la fonction membre "void attack( Unit & target ) const;", qui soustrait
+le damage de l'attaquant à l'HP actuel de la cible et affiche :
+"Unit #{ATT_INDEX} ({ATT_TYPE}) damaged unit #{TAR_INDEX} ({TAR_TYPE})."
+
+
+Le code suivant,
+
+int     main( void ) {
+
+    Unit    u0;
+    Unit    u1("Marine",    // type
+               13, 45,      // posX, posY
+               6,           // dam
+               40, 40);     // cHP, mHP
+    Unit    u2( u1 );
+
+    u0 = u1;
+
+    std::cout << "Index: "      << u0.getIndex() << std::endl;
+    std::cout << "Type: "       << u0.getType()  << std::endl;
+    std::cout << "X: "          << u0.getX()     << std::endl;
+    std::cout << "Y: "          << u0.getY()     << std::endl;
+    std::cout << "Damage: "     << u0.getDam()   << std::endl;
+    std::cout << "Current HP: " << u0.getCHP()   << std::endl;
+    std::cout << "Maximum HP: " << u0.getMHP()   << std::endl;
+
+    std::cout << u0 << std::endl;
+    std::cout << u1 << std::endl;
+    std::cout << u2 << std::endl;
+
+    u2.die();
+
+    u0.move( 12, 45 );
+    u1.move( 14, 45 );
+
+    while ( u0.getCHP() > 0 && u1.getCHP() > 0 ) {
+        u0.attack( u1 );
+        u1.attack( u0 );
+    }
+
+    return 0;
+}
+
+Doit produire la sortie suivante :
+
+$>clang++ -Wall -Wextra -Werror Unit.class.cpp main.cpp
+$>./a.out | cat -e
+[CREATED] Unit #0: Unit in 0/0 with 0/0HP damaging at 0.$
+[CREATED] Unit #1: Marine in 13/45 with 40/40HP damaging at 6.$
+[CREATED] Unit #2: Marine in 13/45 with 40/40HP damaging at 6.$
+Index: 0$
+Type: Marine$
+X: 13$
+Y: 45$
+Damage: 6$
+Current HP: 40$
+Maximum HP: 40$
+Unit #0: Marine in 13/45 with 40/40HP damaging at 6.$
+Unit #1: Marine in 13/45 with 40/40HP damaging at 6.$
+Unit #2: Marine in 13/45 with 40/40HP damaging at 6.$
+Unit #2 (Marine) died.$
+Unit #0 (Marine) is moving from 13/45 to 12/45.$
+Unit #1 (Marine) is moving from 13/45 to 14/45.$
+Unit #0 (Marine) damaged unit #1 (Marine).$
+Unit #1 (Marine) damaged unit #0 (Marine).$
+Unit #0 (Marine) damaged unit #1 (Marine).$
+Unit #1 (Marine) damaged unit #0 (Marine).$
+Unit #0 (Marine) damaged unit #1 (Marine).$
+Unit #1 (Marine) damaged unit #0 (Marine).$
+Unit #0 (Marine) damaged unit #1 (Marine).$
+Unit #1 (Marine) damaged unit #0 (Marine).$
+Unit #0 (Marine) damaged unit #1 (Marine).$
+Unit #1 (Marine) damaged unit #0 (Marine).$
+Unit #0 (Marine) damaged unit #1 (Marine).$
+Unit #1 (Marine) damaged unit #0 (Marine).$
+Unit #0 (Marine) damaged unit #1 (Marine).$
+Unit #1 (Marine) died.$
+[DESTRUCTED] Unit #2: Marine in 13/45 with 0/40HP damaging at 6.$
+[DESTRUCTED] Unit #1: Marine in 14/45 with 0/40HP damaging at 6.$
+[DESTRUCTED] Unit #0: Marine in 12/45 with 4/40HP damaging at 6.$
+$>

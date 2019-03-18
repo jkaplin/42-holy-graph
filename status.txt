@@ -1,0 +1,25 @@
+
+
+To Do:
+piscine_c
+unix (ssl part - to also copy it from algorithms)
+piscine_php
+walking_marvin (branch)
+piscine_unity (branch)
+piscine_unity
+piscine_ocaml
+piscine_cpp (branch)
+piscine_cpp
+piscine_swift_ios (branch)
+piscine_swift_ios
+music_room
+exams
+
+projects:
+rushes
+hercules
+
+
+
+open_projects
+piscines folder woth all the piscines (copies)

@@ -1,0 +1,120 @@
+Assignment name  : cpp00_01
+Expected files   : Unit.class.hpp Unit.class.cpp
+                   Marine.class.hpp Marine.class.cpp
+--------------------------------------------------------------------------------
+
+Dans cette simulation, nous allons tester les capacités suivantes:
+
+* Tout ce qui était testé dans la première simulation
+* L'héritage
+* Le polymorphisme par sub-typage (fonctions membres virtuelles)
+
+Lisez la simulation entièrement avant de commencer à la coder.
+
+Nos Marines sont la première ligne de défense de notre colonie.  Les
+formidables armures qu'ils arborent leur permettent de résister à des
+situations de combat extrêmes. Ces fiers soldats sont armés de fusils Gauss
+C-14 'Impaler' qui leur permettent de déchaîner une puissance de feu
+individuelle impressionnante.
+
+Copiez vos fichiers Unit.class.hpp et Unit.class.cpp du dossier de la
+simulation précédente et mettez les dans le dossier de cette seconde
+simulation.
+
+Editez la classe Unit pour déclarer le destructeur, la fonction membre die et
+la fonction membre move en tant que fonctions membres virtuelles.
+
+L'armure des Marines contient son propre système d'informations représenté par
+la classe Marine.
+
+La classe Marine hérite publiquement de la classe Unit.
+
+La classe Marine est canonique. Tous les éléments canoniques de la classe
+doivent être public.
+
+La construction d'un marine requière ses positions X et Y. En tant qu'unit,
+vous initialiserez son type, son damage et ses HP (Health Points = points de
+vie).
+
+Le type d'un marine est "Marine". Cette célèbre unit a 40HP et inflige 6 points
+de damage.
+
+A sa création, un Marine dit:
+"Unit #{INDEX}: You want a piece of me, boy ?"
+
+Re-définissez la fonction membre virtuelle die pour qu'elle affiche
+"Unit #{INDEX}: Aaaargh..." lorsqu'on l'appelle, après l'affichage usuel.
+
+Re-définissez la fonction membre virtuelle move pour qu'elle affiche
+"Unit #{INDEX}: Rock'n'roll !!!" lorsqu'on l'appelle, après l'affichage usuel.
+
+Ajoutez la fonction membre function "void stimpack( void );"
+Cette fonction membre double le damage du Marine et réduit son HP actuel de 10
+points. Le marine répond alors: 
+"Unit #{INDEX}: Ho yeah..."
+Le stimpack ne peut pas descendre les HP du Marine en dessous de 1 HP.
+
+    
+Le code suivant,
+
+int     main( void ) {
+
+    Marine  m0;
+    Marine  m1( 23, 56 );
+    Marine  m2( m1 );
+
+    m0 = m1;
+
+    std::cout << m0 << std::endl;
+    std::cout << m1 << std::endl;
+    std::cout << m2 << std::endl;
+
+    m2.die();
+
+    m0.move( 22, 56 );
+    m1.move( 24, 56 );
+
+    m1.stimpack();
+
+    while ( m0.getCHP() > 0 && m1.getCHP() > 0 ) {
+        m0.attack( m1 );
+        m1.attack( m0 );
+    }
+
+    return 0;
+}
+    
+Doit produire la sortie suivante:
+
+$>clang++ -Wall -Wextra -Werror Unit.class.cpp Marine.class.cpp main.cpp
+$>./a.out | cat -e
+[CREATED] Unit #0: Marine in 0/0 with 40/40HP damaging at 6.$
+Unit #0: You want a piece of me, boy ?$
+[CREATED] Unit #1: Marine in 23/56 with 40/40HP damaging at 6.$
+Unit #1: You want a piece of me, boy ?$
+[CREATED] Unit #2: Marine in 23/56 with 40/40HP damaging at 6.$
+Unit #2: You want a piece of me, boy ?$
+Unit #0: Marine in 23/56 with 40/40HP damaging at 6.$
+Unit #1: Marine in 23/56 with 40/40HP damaging at 6.$
+Unit #2: Marine in 23/56 with 40/40HP damaging at 6.$
+Unit #2 (Marine) died.$
+Unit #2: Aaaargh...$
+Unit #0 (Marine) is moving from 23/56 to 22/56.$
+Unit #0: Rock'n'roll !!!$
+Unit #1 (Marine) is moving from 23/56 to 24/56.$
+Unit #1: Rock'n'roll !!!$
+Unit #1: Ho yeah...$
+Unit #0 (Marine) damaged unit #1 (Marine).$
+Unit #1 (Marine) damaged unit #0 (Marine).$
+Unit #0 (Marine) damaged unit #1 (Marine).$
+Unit #1 (Marine) damaged unit #0 (Marine).$
+Unit #0 (Marine) damaged unit #1 (Marine).$
+Unit #1 (Marine) damaged unit #0 (Marine).$
+Unit #0 (Marine) damaged unit #1 (Marine).$
+Unit #1 (Marine) damaged unit #0 (Marine).$
+Unit #0 (Marine) died.$
+Unit #0: Aaaargh...$
+[DESTRUCTED] Unit #2: Marine in 23/56 with 0/40HP damaging at 6.$
+[DESTRUCTED] Unit #1: Marine in 24/56 with 6/40HP damaging at 12.$
+[DESTRUCTED] Unit #0: Marine in 22/56 with 0/40HP damaging at 6.$
+$>

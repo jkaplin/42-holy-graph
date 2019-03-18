@@ -1,0 +1,119 @@
+Assignment name  : cpp01_02
+Expected files   : Warlock.cpp Warlock.hpp
+                   ASpell.hpp ASpell.cpp
+				   ATarget.hpp ATarget.cpp
+				   Fwoosh.hpp Fwoosh.cpp
+				   LittleKid.hpp LittleKid.cpp
+--------------------------------------------------------------------------------
+
+Dans la classe Warlock, le switch est strictement INTERDIT et son utilisation
+résulterait en un -42.
+
+Maintenant on peut commencer à se poiler. Enfin, c'est ce que dirait notre
+Warlock s'il savait ce qu'on a en réserve pour lui.
+
+Maintenant qu'il peut parler, et se la péter tranquillement, on va devoir lui
+trouver des trucs à faire. Si il ne peut pas tuer des gens, il s'ennuie. Pauvre
+de lui.
+
+Créez une classe abstraite ASpell, en form de Coplien, qui a les attributs
+protégés suivants:
+
+* name (string)
+* effects (string)
+
+Les deux auront des getters (getName et getEffects) qui retournent des strings.
+
+Ajoutez une méthode pure clone() qui retourne un pointeur sur ASpell.
+
+Toutes ces fonctions peuvent être appelées sur un objet constant.
+
+ASpell a un constructeur qui prend son nom et ses effets, dans cet ordre.
+
+Maintenant vous allez créer une classe abstraite ATarget, en forme de Coplien,
+qui a un attribut type (string), et son gette associé getType, qui retourne une
+référence sur string constante.
+
+Pareil que pour ASpell, faites lui une méthode pure clone().
+
+Ces fonctions peuvent être appelées sur un objet constant.
+
+Elle a un constructeur qui prend son type.
+
+Ensuite, ajoutez à ATarget une fonction getHitBySpell qui prend une référence
+vers ASpell constant.
+
+Elle affichera :
+
+<TYPE> has been <EFFECTS> !
+
+<TYPE> est le type du ATarget, et <EFFECTS> est le retour de la fonction
+getEffects du ASpell.
+
+Enfin, ajoutez à votre ASpell une fonction launch qui prend une référence vers
+ATarget constant. Celle-ci va simplement appeler le getHitBySpell de l'objet
+passé en paramètre, en lui donnant en paramètre l'instance courante.
+
+Ceci étant fait, implémentez votre classe ASpell avec une classe Fwoosh. Son
+constructeur par défaut va mettre son nom à "Fwoosh" et ses effets à
+"fwooshed". Bien évidemment, vous devez implémenter la méthode clone(), qui
+dans ce cas va retourner un pointeur vers un nouveau Fwoosh.
+
+Dans le même style, créez un ATarget concret appelé LittleKid, dont le type
+sera "Little Kid". Évidemment vous devez implémenter sa méthode clone().
+
+Maintenant qu'on a des sorts et des cibles, il va falloir rendre le Warlock
+capable de les utiliser, sinon il serait toujours aussi inutile qu'un joueur
+console.
+
+Ajoutez les fonctions membres suivantes au Warlock:
+
+* learnSpell, prend un pointeur sur ASpell, qui apprend un sort au Warlock
+* forgetSpell, prend une string correspondant au nom d'un sort, et le fait
+  oublier au Warlock s'il le connait, sinon ne fait rien. 
+* launchSpell, prend une string correspondant au nom d'un sort et une référence
+  sur ATarget, qui lance le sort en question sur la cible s'il est connu, sinon
+  ne fait rien.
+
+
+Il vous faudra un nouvel attribut pour stocker les sorts de votre Warlock.
+Plusieurs types font l'affaire, à vous de choisir le plus adapté.
+
+Ci-dessous un possible main et sa sortie:
+
+int main()
+{
+  Warlock richard("Richard");
+
+  richard.addTitle("Chief Warlock of the Brothers of Darkness");
+  richard.addTitle("Lord of the Thirteen Hells");
+  richard.addTitle("Emperor of the Black");
+  richard.addTitle("Lord of the Undead");
+  richard.addTitle("Mistress of Magma");
+  richard.addQuote("You've just been Dick-rolled !");
+  richard.addQuote("This day is fantastic ...");
+  richard.addQuote("That orphanage attacked ME. It was self-defense !");
+  richard.addQuote("You like what I do ?");
+
+  LittleKid bob;
+  Fwoosh* fwoosh = new Fwoosh();
+
+  richard.learnSpell(fwoosh);
+
+  richard.introduce();
+  richard.launchSpell("Fwoosh", bob);
+  richard.talk();
+
+  richard.forgetSpell("Fwoosh");
+  richard.launchSpell("Fwoosh", bob);
+}
+
+zaz@naqadah:~$ ./a.out | cat -e
+Richard: This looks like another boring day.$
+Richard: I am Richard, Chief Warlock of the Brothers of Darkness, Lord of the
+Thirteen Hells, Emperor of the Black, Lord of the Undead, Mistress of Magma !
+And the mayor of a little village on the coast. Very scenic during springtime
+, you should visit sometime !$
+Little Kid has been fwooshed !$
+Richard: That orphanage attacked ME. It was self-defense !$
+Richard: Ahhh, I see it clearly. This is the plane of SUCK...$

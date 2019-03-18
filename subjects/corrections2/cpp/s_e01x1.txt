@@ -1,0 +1,103 @@
+Assignment name  : cpp01_01
+Expected files   : Warlock.cpp Warlock.hpp
+--------------------------------------------------------------------------------
+
+On me souffle à l'oreille que notre Warlock n'est pas encore complet.  En
+effet, le vrai Richard a plusieurs titres, et non pas un seul. Il est également
+bien plus loquace que notre Warlock actuel !  Modifiez le Warlock de telle
+sorte que:
+
+* Le constructeur qui prenait un nom et un titre ne prend plus qu'un nom.
+* L'attribut title est maintenant une liste de strings et s'appelle titles.
+* Les fonctions getTitle et setTitle disparaissent.
+* La fonction introduce doit maintenant afficher tous les titres du Warlock, plus un autre, de la façon suivante:
+
+<NAME>: I am <NAME>, <TITLE1>, <TITLE2> [...], <TITLEn> ! And the mayor of a little village on the coast. Very scenic during springtime, you should visit sometime !
+
+Par exemple, si notre Warlock appelé Richard a les titres suivants :
+
+* Lord of the Undead Ponies
+* Master of the Wine Cellar
+
+Vous devez afficher :
+
+Richard: I am Richard, Lord of the Undead Ponies, Master of the Wine Cellar ! And the mayor of a little village on the coast. Very scenic during springtime, you should visit sometime !
+
+Si notre Warlock n'a pas de titre, contentez-vous de mentionner qu'il a un
+petit village sur la côte (Oui, c'est important):
+
+Richard: I am Richard ! And the mayor of a little village on the coast. Very scenic during springtime, you should visit sometime !
+
+Vu qu'il va probablement falloir manipuler ses titres à un moment ou un autre,
+et qu'on ne va pas lui demander de le faire tout seul (Il a mieux a faire,
+quand même), vous allez faire des fonctions pour gérer cela: 
+
+* addTitle, qui prend une référence sur string constante et ajoute un nouveau titre à la collection du Warlock.
+* removeTitle, qui prend une référence sur string constante et efface le titre en question s'il existe, sinon ne fait rien.
+
+Mieux. Maintenant que notre Warlock est capable de dérouler sa longue ... liste
+de titres, on va devoir faire en sorte qu'il puisse parler. Parce qu'un Warlock
+qui ne peut pas lâcher deux ou trois blagues glauques et bien choisies devant
+le malheur des autres est à peu près aussi utile qu'un développeur web.
+
+Ajoutez donc un attribut privé nommé quotes, qui sera une liste (ou un vector,
+selon ce que vous pensez être mieux) de strings. Un choix est évidemment
+meilleur que l'autre.
+
+Comme pour les titres, faites les fonctions addQuote et removeQuote.
+
+Quand ce sera fait, ajoutez une fonction talk, qui ne prend rien, ne retourne
+rien et est appelable sur un Warlock constant.
+
+Cette fonction va choisir une quote au hasard parmi celles que notre Warlock
+connaît, et affiche:
+
+<NAME>: <QUOTE>
+
+Dans le cas (que l'on espère très rare) où notre Warlock n'a rien a dire, cette
+fonction ne fait rien.
+
+Pour choisir une quote au hasard, utilisez rand() % nombre_de_quotes_connues.
+N'utilisez PAS srand() dans votre code. Jamais. Sinon la Moulinette n'aura pas
+la même random seed que vous, et vous aurez 0. Ca serait con.
+
+Voici un main d'exemple avec sa sortie associée. Bien évidemment, l'ordre des
+quotes peut différer, vu que, ben, random ...
+
+int main()
+{
+  Warlock richard("Richard");
+  
+  richard.addTitle("Chief Warlock of the Brothers of Darkness");
+  richard.addTitle("Lord of the Thirteen Hells");
+  richard.addTitle("Emperor of the Black");
+  richard.addTitle("Lord of the Undead");
+  richard.addTitle("Mistress of Magma");
+  richard.introduce();
+
+  richard.removeTitle("Mistress of Magma");
+  richard.introduce();
+    
+  richard.addQuote("You've just been Dick-rolled !");
+  richard.addQuote("This day is fantastic ...");
+  richard.addQuote("That orphanage attacked ME. It was self-defense !");
+  richard.addQuote("You like what I do ?");
+   
+  richard.talk();
+  richard.talk();
+}
+
+zaz@naqadah:~$ ./a.out | cat -e
+Richard: This looks like another boring day.$
+Richard: I am Richard, Chief Warlock of the Brothers of Darkness, Lord of the
+Thirteen Hells, Emperor of the Black, Lord of the Undead, Mistress of Magma !
+And the mayor of a little village on the coast. Very scenic during springtime,
+you should visit sometime !$
+Richard: I am Richard, Chief Warlock of the Brothers of Darkness, Lord of the
+Thirteen Hells, Emperor of the Black, Lord of the Undead ! And the mayor of a
+little village on the coast. Very scenic during springtime, you should visit
+sometime !$
+Richard: This day is fantastic ...$
+Richard: You've just been Dick-rolled !$
+Richard: Ahhh, I see it clearly. This is the plane of SUCK...$
+zaz@naqadah:~$
